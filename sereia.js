@@ -5,10 +5,12 @@ require('dotenv').config();
 const { installChannelProfileBootstrap } = require('./core/bootstrap');
 const { installResearchIntelligenceBootstrap } = require('./core/research-intelligence-bootstrap');
 const { installStrategyShadowBootstrap } = require('./core/strategy-shadow-bootstrap');
+const { installEditorialPackagingBootstrap } = require('./core/editorial-packaging-bootstrap');
 
 installChannelProfileBootstrap();
 installResearchIntelligenceBootstrap();
 installStrategyShadowBootstrap();
+installEditorialPackagingBootstrap();
 
 const { YouTubeAutomationAgent } = require('./index');
 

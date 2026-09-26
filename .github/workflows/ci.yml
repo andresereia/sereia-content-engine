@@ -43,5 +43,8 @@ jobs:
       - name: Test research intelligence layer
         run: npm run test:research
 
+      - name: Test editorial packaging assist
+        run: npm run test:packaging
+
       - name: Test upstream core
         run: npm test
