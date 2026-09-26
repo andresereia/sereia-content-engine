@@ -22,16 +22,17 @@ function installStrategyShadowBootstrap(options = {}) {
   const ServiceClass = options.ServiceClass || TopicIntelligenceShadowService;
 
   prototype.researchAndPlanChannel = async function sereiaResearchAndPlanChannel(channelStrategy) {
-    const result = await original.call(this, channelStrategy);
-    const research = result?.research || {};
-    const plan = Array.isArray(result?.plan) ? result.plan : [];
+    const upstreamResult = await original.call(this, channelStrategy);
+    const result = upstreamResult && typeof upstreamResult === 'object'
+      ? upstreamResult
+      : { research: {}, plan: [] };
+    const research = result.research && typeof result.research === 'object' ? result.research : {};
+    const plan = Array.isArray(result.plan) ? result.plan : [];
 
     try {
       const registry = new RegistryClass({ logger: this.logger || console });
       const profile = await registry.loadActiveProfile();
-      if (!isShadowModeEnabled(profile)) {
-        return result;
-      }
+      if (!isShadowModeEnabled(profile)) return result;
 
       const service = new ServiceClass(profile);
       const comparison = service.evaluate({ research, plan, channelStrategy });
