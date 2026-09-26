@@ -6,11 +6,13 @@ const { installChannelProfileBootstrap } = require('./core/bootstrap');
 const { installResearchIntelligenceBootstrap } = require('./core/research-intelligence-bootstrap');
 const { installStrategyShadowBootstrap } = require('./core/strategy-shadow-bootstrap');
 const { installEditorialPackagingBootstrap } = require('./core/editorial-packaging-bootstrap');
+const { installNarrativeSceneBlueprintBootstrap } = require('./core/narrative-scene-blueprint-bootstrap');
 
 installChannelProfileBootstrap();
 installResearchIntelligenceBootstrap();
 installStrategyShadowBootstrap();
 installEditorialPackagingBootstrap();
+installNarrativeSceneBlueprintBootstrap();
 
 const { YouTubeAutomationAgent } = require('./index');
 
