@@ -17,6 +17,7 @@
     "test:research": "node tests/research-intelligence-layer.test.js && node tests/research-intelligence-bootstrap.test.js",
     "test:packaging": "node tests/editorial-packaging-layer.test.js && node tests/editorial-packaging-bootstrap.test.js",
     "test:narrative": "node tests/narrative-scene-blueprint.test.js && node tests/narrative-scene-blueprint-bootstrap.test.js",
+    "test:diagnostics": "node tests/sereia-diagnostics-service.test.js && node tests/sereia-diagnostics-api.test.js && node --check dashboard/sereia-intelligence.js",
     "agent:strategy": "node agents/content-strategy-agent.js",
     "agent:script": "node agents/script-writer-agent.js",
     "agent:thumbnail": "node agents/thumbnail-designer-agent.js",
