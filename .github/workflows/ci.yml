@@ -40,5 +40,8 @@ jobs:
       - name: Test topic intelligence shadow mode
         run: npm run test:shadow
 
+      - name: Test research intelligence layer
+        run: npm run test:research
+
       - name: Test upstream core
         run: npm test

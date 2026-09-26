@@ -77,6 +77,18 @@
       "Reject a topic that cannot produce a clear title/thumbnail concept before scripting."
     ]
   },
+  "researchIntelligence": {
+    "enabled": true,
+    "mode": "augment",
+    "provider": "youtube-data-api",
+    "lookbackDays": 365,
+    "maxQueries": 5,
+    "resultsPerQuery": 5,
+    "upstreamSlots": 10,
+    "expansionSlots": 5,
+    "cacheMinutes": 30,
+    "principle": "Preserve AgentTube trending, competitor and historical research as the primary foundation; add only complementary YouTube search evidence."
+  },
   "visual": {
     "stylePrompt": "Consistent 2D stickman explainer system with the recurring character Beto, simple readable compositions, warm light background, clean shapes, restrained motion and reusable modular assets. Preserve character proportions and drawing quality across every scene.",
     "assetReuseTarget": 0.65,

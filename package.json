@@ -14,6 +14,7 @@
     "test:editorial": "node tests/editorial-core.test.js",
     "test:bootstrap": "node tests/bootstrap-contract.test.js",
     "test:shadow": "node tests/topic-intelligence-shadow.test.js && node tests/strategy-shadow-bootstrap.test.js",
+    "test:research": "node tests/research-intelligence-layer.test.js && node tests/research-intelligence-bootstrap.test.js",
     "agent:strategy": "node agents/content-strategy-agent.js",
     "agent:script": "node agents/script-writer-agent.js",
     "agent:thumbnail": "node agents/thumbnail-designer-agent.js",
