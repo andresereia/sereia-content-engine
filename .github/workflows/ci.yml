@@ -28,5 +28,14 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
+      - name: Validate channel profiles
+        run: npm run profile:validate
+
+      - name: Test editorial core
+        run: npm run test:editorial
+
+      - name: Test bootstrap contract
+        run: npm run test:bootstrap
+
+      - name: Test upstream core
         run: npm test
