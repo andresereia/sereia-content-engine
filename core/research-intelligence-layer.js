@@ -11,10 +11,30 @@ class ResearchIntelligenceLayer {
       resultsPerQuery: 5,
       upstreamSlots: 10,
       expansionSlots: 5,
+      cacheMinutes: 30,
       ...(profile?.researchIntelligence || {}),
       ...(options.config || {})
     };
     this.now = options.now || (() => new Date());
+    this.validateConfig();
+  }
+
+  validateConfig() {
+    if (this.config.mode !== 'augment') throw new Error('Research intelligence mode must remain "augment"');
+    const ranges = {
+      lookbackDays: [1, 3650],
+      maxQueries: [1, 10],
+      resultsPerQuery: [1, 10],
+      upstreamSlots: [1, 15],
+      expansionSlots: [0, 15],
+      cacheMinutes: [0, 1440]
+    };
+    for (const [key, [min, max]] of Object.entries(ranges)) {
+      const value = Number(this.config[key]);
+      if (!Number.isFinite(value) || value < min || value > max) {
+        throw new Error(`researchIntelligence.${key} must be between ${min} and ${max}`);
+      }
+    }
   }
 
   buildQueries(upstreamTopics = []) {
@@ -33,7 +53,7 @@ class ResearchIntelligenceLayer {
       if (seeds.length >= this.config.maxQueries * 2) break;
     }
 
-    return seeds.slice(0, Math.max(1, Number(this.config.maxQueries) || 5));
+    return seeds.slice(0, this.config.maxQueries);
   }
 
   async expand({ youtube, upstreamTopics = [] }) {
@@ -56,7 +76,7 @@ class ResearchIntelligenceLayer {
           q: query,
           type: 'video',
           order: 'relevance',
-          maxResults: Math.max(1, Math.min(10, Number(this.config.resultsPerQuery) || 5)),
+          maxResults: this.config.resultsPerQuery,
           regionCode: this.profile?.identity?.region || 'US',
           relevanceLanguage: String(this.profile?.identity?.locale || 'en-US').split('-')[0],
           publishedAfter: this.publishedAfter()
@@ -112,26 +132,25 @@ class ResearchIntelligenceLayer {
           if (!existing || score > existing.score) signalsByVideo.set(videoId, signal);
         }
         succeeded++;
-      } catch (error) {
+      } catch (_error) {
         failed++;
       }
     }
 
     const signals = [...signalsByVideo.values()]
       .sort((a, b) => b.score - a.score)
-      .slice(0, Math.max(1, Number(this.config.expansionSlots) || 5) * 3);
+      .slice(0, Math.max(1, this.config.expansionSlots) * 3);
+    const status = failed === 0 ? 'ok' : succeeded === 0 ? 'degraded' : 'partial';
 
     return {
       signals,
-      diagnostics: this.buildDiagnostics(queries, succeeded, failed, 'ok')
+      diagnostics: this.buildDiagnostics(queries, succeeded, failed, status)
     };
   }
 
   mergeSignals(upstream = [], expansion = []) {
-    const upstreamSlots = Math.max(1, Number(this.config.upstreamSlots) || 10);
-    const expansionSlots = Math.max(0, Number(this.config.expansionSlots) || 5);
-    const primaryUpstream = upstream.slice(0, upstreamSlots);
-    const chosenExpansion = expansion.slice(0, expansionSlots);
+    const primaryUpstream = upstream.slice(0, this.config.upstreamSlots);
+    const chosenExpansion = expansion.slice(0, this.config.expansionSlots);
     const seen = new Set();
     const merged = [];
 
@@ -144,8 +163,8 @@ class ResearchIntelligenceLayer {
 
     primaryUpstream.forEach(add);
     chosenExpansion.forEach(add);
-    upstream.slice(upstreamSlots).forEach(add);
-    expansion.slice(expansionSlots).forEach(add);
+    upstream.slice(this.config.upstreamSlots).forEach(add);
+    expansion.slice(this.config.expansionSlots).forEach(add);
 
     return merged.slice(0, 50);
   }
@@ -165,8 +184,7 @@ class ResearchIntelligenceLayer {
   }
 
   publishedAfter() {
-    const days = Math.max(1, Number(this.config.lookbackDays) || 365);
-    return new Date(this.now().getTime() - days * 86400000).toISOString();
+    return new Date(this.now().getTime() - this.config.lookbackDays * 86400000).toISOString();
   }
 
   signalKey(item) {
@@ -187,6 +205,7 @@ class ResearchIntelligenceLayer {
       queriesAttempted: Array.isArray(queries) ? queries.length : 0,
       queriesSucceeded: succeeded,
       queriesFailed: failed,
+      estimatedQuotaUnits: succeeded * 101 + failed * 100,
       generatedAt: this.now().toISOString()
     };
   }
