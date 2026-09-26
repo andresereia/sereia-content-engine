@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "cidade-economica",
+  "identity": {
+    "channelName": "Cidade Econômica",
+    "goal": "Build a repeatable US-focused faceless explainer channel that reveals hidden economic mechanisms in ordinary life.",
+    "targetAudience": "English-speaking US viewers interested in money, economics, companies and the hidden systems behind everyday spending.",
+    "locale": "en-US",
+    "region": "US",
+    "timezone": "UTC"
+  },
+  "strategy": {
+    "objective": "Publish differentiated explainers that turn ordinary financial and business situations into curiosity-driven stories about who pays, who profits and how the mechanism works.",
+    "audience": "US adults who enjoy accessible business/economics explainers and practical curiosity, without requiring finance expertise.",
+    "valueProposition": "Make invisible economic mechanisms visible through simple stories, concrete examples and a consistent stickman visual system.",
+    "contentPillars": [
+      "hidden fees and recurring payments",
+      "banks cards credit and financing",
+      "insurance and risk transfer",
+      "how companies monetize everyday behavior",
+      "why ordinary goods and services become expensive"
+    ],
+    "cadencePerWeek": 1,
+    "videosPerRun": 1,
+    "defaultFormat": "explainer",
+    "defaultLength": "medium",
+    "successMetric": "CTR, first-30-second retention, average percentage viewed, impressions and qualified views",
+    "primaryKpi": "views",
+    "targetValue": null,
+    "targetWindowDays": 28,
+    "monthlyBudget": null,
+    "outcomeCurrency": "USD",
+    "constraints": "Validate demand before production. Do not select a topic only because its RPM might be high. Avoid generic personal-finance advice, fabricated urgency, unsupported numbers and repetitive subtopics. Human approval is required before any publishing action."
+  },
+  "editorial": {
+    "brandVoice": "Clear, curious, concise and evidence-led. Explain the mechanism without sounding academic. Build tension from a concrete contradiction rather than hype.",
+    "callToAction": "Use a soft CTA only after delivering value; never open with a generic subscribe request.",
+    "bannedTopics": [
+      "get rich quick",
+      "guaranteed returns",
+      "risk-free investment",
+      "secret investment trick"
+    ],
+    "marketValidationRequired": true,
+    "topicScoring": {
+      "weights": {
+        "demandEvidence": 22,
+        "curiosityContradiction": 18,
+        "packagingPotential": 16,
+        "relevance": 14,
+        "differentiation": 12,
+        "recency": 8,
+        "evergreenPotential": 6,
+        "visualPotential": 4
+      },
+      "saturationPenaltyMax": 20,
+      "gates": {
+        "minimumOverallScore": 70,
+        "minimumEvidenceSources": 2,
+        "minimumDemandEvidence": 60,
+        "minimumPackagingPotential": 60
+      }
+    },
+    "narrativeRules": [
+      "Open on the contradiction, cost, consequence or unanswered mechanism before any greeting.",
+      "Show a concrete everyday situation before abstract explanation.",
+      "Reveal the mechanism in steps: what happens, who benefits, who pays and where the risk moves.",
+      "Use numbers only when a source supports them and the number changes the viewer's understanding.",
+      "Prefer one strong central promise over multiple disconnected lessons.",
+      "End by resolving the opening question or contradiction."
+    ],
+    "packagingRules": [
+      "Title and thumbnail must express one tension or contradiction.",
+      "Do not duplicate the full title in the thumbnail.",
+      "No false scarcity, false certainty or claim stronger than the evidence.",
+      "Reject a topic that cannot produce a clear title/thumbnail concept before scripting."
+    ]
+  },
+  "visual": {
+    "stylePrompt": "Consistent 2D stickman explainer system with the recurring character Beto, simple readable compositions, warm light background, clean shapes, restrained motion and reusable modular assets. Preserve character proportions and drawing quality across every scene.",
+    "assetReuseTarget": 0.65,
+    "strictConsistency": true,
+    "recurringCharacter": "Beto",
+    "libraryFirst": true,
+    "notes": "Target 60-70% reusable scenes/assets. Create new assets only when the episode requires a genuinely new concept."
+  },
+  "production": {
+    "approvalRequired": true,
+    "autoPublish": false,
+    "automationPausedByDefault": true,
+    "narration": {
+      "language": "en-US",
+      "speed": 0.95,
+      "speedStatus": "testing-not-standard"
+    }
+  }
+}
