@@ -86,6 +86,7 @@
     "resultsPerQuery": 5,
     "upstreamSlots": 10,
     "expansionSlots": 5,
+    "cacheMinutes": 30,
     "principle": "Preserve AgentTube trending, competitor and historical research as the primary foundation; add only complementary YouTube search evidence."
   },
   "visual": {
