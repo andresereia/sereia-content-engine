@@ -48,6 +48,7 @@ function installResearchIntelligenceBootstrap(options = {}) {
           signals: this.__sereiaResearchCache.signals,
           diagnostics: {
             ...this.__sereiaResearchCache.diagnostics,
+            sourceStatus: this.__sereiaResearchCache.diagnostics.status,
             status: 'cached',
             cacheAgeSeconds: Math.round(cacheAgeMs / 1000),
             generatedAt: new Date().toISOString()
@@ -55,11 +56,13 @@ function installResearchIntelligenceBootstrap(options = {}) {
         };
       } else {
         expansion = await layer.expand({ youtube, upstreamTopics });
-        this.__sereiaResearchCache = {
-          createdAt: Date.now(),
-          signals: expansion.signals,
-          diagnostics: expansion.diagnostics
-        };
+        if (expansion.signals.length > 0) {
+          this.__sereiaResearchCache = {
+            createdAt: Date.now(),
+            signals: expansion.signals,
+            diagnostics: expansion.diagnostics
+          };
+        }
       }
 
       this.trendingTopics = layer.mergeSignals(upstreamTopics, expansion.signals);
@@ -99,7 +102,7 @@ function installResearchIntelligenceBootstrap(options = {}) {
         ...research,
         sereiaResearchIntelligence: this.__sereiaResearchIntelligence
       };
-      if (['ok', 'cached'].includes(this.__sereiaResearchIntelligence.status)) {
+      if (['ok', 'cached', 'partial'].includes(this.__sereiaResearchIntelligence.status)) {
         const sources = new Set(result.research.sources || []);
         sources.add('Sereia YouTube search expansion (additive to AgentTube research)');
         result.research.sources = [...sources];
