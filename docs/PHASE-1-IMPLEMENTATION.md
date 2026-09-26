@@ -42,6 +42,9 @@ npm run test:editorial
 npm start
 ```
 
+## CI gate
+Pull requests into `master` run Sereia profile validation and editorial/bootstrap tests before the upstream lint and test suite. Phase branches are not merged until those checks are green.
+
 ## Pilot scope
 The only active pilot is `cidade-economica`. Narration speed `0.95` is explicitly tagged as testing, not a permanent voice standard.
 
