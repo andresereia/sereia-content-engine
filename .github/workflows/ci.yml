@@ -37,5 +37,8 @@ jobs:
       - name: Test bootstrap contract
         run: npm run test:bootstrap
 
+      - name: Test topic intelligence shadow mode
+        run: npm run test:shadow
+
       - name: Test upstream core
         run: npm test

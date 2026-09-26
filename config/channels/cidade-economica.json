@@ -43,6 +43,7 @@
     ],
     "marketValidationRequired": true,
     "topicScoring": {
+      "shadowModeEnabled": true,
       "weights": {
         "demandEvidence": 22,
         "curiosityContradiction": 18,
