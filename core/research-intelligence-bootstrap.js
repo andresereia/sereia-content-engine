@@ -36,7 +36,32 @@ function installResearchIntelligenceBootstrap(options = {}) {
 
       const layer = new LayerClass(profile);
       const upstreamTopics = Array.isArray(this.trendingTopics) ? this.trendingTopics : [];
-      const expansion = await layer.expand({ youtube, upstreamTopics });
+      const cacheMinutes = Math.max(0, Number(profile.researchIntelligence?.cacheMinutes ?? 30));
+      const cacheAgeMs = this.__sereiaResearchCache?.createdAt
+        ? Date.now() - this.__sereiaResearchCache.createdAt
+        : Number.POSITIVE_INFINITY;
+      const cacheValid = cacheMinutes > 0 && cacheAgeMs <= cacheMinutes * 60000;
+
+      let expansion;
+      if (cacheValid) {
+        expansion = {
+          signals: this.__sereiaResearchCache.signals,
+          diagnostics: {
+            ...this.__sereiaResearchCache.diagnostics,
+            status: 'cached',
+            cacheAgeSeconds: Math.round(cacheAgeMs / 1000),
+            generatedAt: new Date().toISOString()
+          }
+        };
+      } else {
+        expansion = await layer.expand({ youtube, upstreamTopics });
+        this.__sereiaResearchCache = {
+          createdAt: Date.now(),
+          signals: expansion.signals,
+          diagnostics: expansion.diagnostics
+        };
+      }
+
       this.trendingTopics = layer.mergeSignals(upstreamTopics, expansion.signals);
       this.__sereiaResearchIntelligence = {
         ...expansion.diagnostics,
@@ -47,8 +72,8 @@ function installResearchIntelligenceBootstrap(options = {}) {
       };
 
       this.logger?.info?.(
-        `Sereia research intelligence augmented ${upstreamTopics.length} AgentTube signal(s) with ` +
-        `${expansion.signals.length} YouTube search signal(s); upstream research preserved.`
+        `Sereia research intelligence ${cacheValid ? 'reused' : 'added'} ${expansion.signals.length} ` +
+        `YouTube search signal(s) on top of ${upstreamTopics.length} AgentTube signal(s); upstream research preserved.`
       );
     } catch (error) {
       this.__sereiaResearchIntelligence = {
@@ -74,7 +99,7 @@ function installResearchIntelligenceBootstrap(options = {}) {
         ...research,
         sereiaResearchIntelligence: this.__sereiaResearchIntelligence
       };
-      if (this.__sereiaResearchIntelligence.status === 'ok') {
+      if (['ok', 'cached'].includes(this.__sereiaResearchIntelligence.status)) {
         const sources = new Set(result.research.sources || []);
         sources.add('Sereia YouTube search expansion (additive to AgentTube research)');
         result.research.sources = [...sources];
