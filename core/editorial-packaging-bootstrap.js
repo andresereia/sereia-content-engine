@@ -38,34 +38,40 @@ function installEditorialPackagingBootstrap(options = {}) {
   }
 
   ScriptWriterAgent.prototype.generateScript = async function sereiaGenerateScript(strategy) {
+    let brief = null;
+    let strategyForUpstream = strategy;
+
     try {
       const registry = new RegistryClass({ logger: this.logger || console });
       const profile = await registry.loadActiveProfile();
-      if (!isEditorialPackagingEnabled(profile)) return originalGenerateScript.call(this, strategy);
+      if (isEditorialPackagingEnabled(profile)) {
+        const layer = new LayerClass(profile);
+        brief = await layer.build({ strategy, aiTextService: this.aiTextService });
+        const applyAngle = profile.editorialPackaging?.applyRefinedAngleToUpstream !== false;
+        const existingRationale = String(strategy?.planRationale || '').trim();
+        const guidance = buildGuidance(brief);
+        strategyForUpstream = {
+          ...strategy,
+          angle: applyAngle && brief.angle ? brief.angle : strategy.angle,
+          planRationale: [existingRationale, `Sereia editorial assist:\n${guidance}`].filter(Boolean).join('\n\n'),
+          sereiaEditorialBrief: brief
+        };
+      }
+    } catch (error) {
+      brief = null;
+      strategyForUpstream = strategy;
+      this.logger?.warn?.(`Sereia editorial packaging unavailable; using AgentTube script flow unchanged: ${error.message}`);
+    }
 
-      const layer = new LayerClass(profile);
-      const brief = await layer.build({ strategy, aiTextService: this.aiTextService });
-      const applyAngle = profile.editorialPackaging?.applyRefinedAngleToUpstream !== false;
-      const existingRationale = String(strategy?.planRationale || '').trim();
-      const guidance = buildGuidance(brief);
-      const enrichedStrategy = {
-        ...strategy,
-        angle: applyAngle && brief.angle ? brief.angle : strategy.angle,
-        planRationale: [existingRationale, `Sereia editorial assist:\n${guidance}`].filter(Boolean).join('\n\n'),
-        sereiaEditorialBrief: brief
-      };
-
-      const script = await originalGenerateScript.call(this, enrichedStrategy);
+    const script = await originalGenerateScript.call(this, strategyForUpstream);
+    if (brief) {
       script.metadata = {
         ...(script.metadata || {}),
         sereiaEditorialBrief: brief
       };
       this.logger?.info?.('Sereia editorial packaging briefing supplied to the upstream Script Writer; upstream script generation preserved.');
-      return script;
-    } catch (error) {
-      this.logger?.warn?.(`Sereia editorial packaging unavailable; using AgentTube script flow unchanged: ${error.message}`);
-      return originalGenerateScript.call(this, strategy);
     }
+    return script;
   };
 
   ThumbnailDesignerAgent.prototype.generateConcept = async function sereiaGenerateConcept(script) {
