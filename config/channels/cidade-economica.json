@@ -89,6 +89,16 @@
     "cacheMinutes": 30,
     "principle": "Preserve AgentTube trending, competitor and historical research as the primary foundation; add only complementary YouTube search evidence."
   },
+  "editorialPackaging": {
+    "enabled": true,
+    "mode": "assist",
+    "useAI": true,
+    "titleCandidateCount": 3,
+    "thumbnailTextMaxWords": 3,
+    "applyRefinedAngleToUpstream": true,
+    "preserveUpstreamOutput": true,
+    "principle": "Create a stronger promise, angle, hook and packaging brief, then feed that guidance into AgentTube's existing Script Writer, Thumbnail Designer and SEO agents instead of replacing them."
+  },
   "visual": {
     "stylePrompt": "Consistent 2D stickman explainer system with the recurring character Beto, simple readable compositions, warm light background, clean shapes, restrained motion and reusable modular assets. Preserve character proportions and drawing quality across every scene.",
     "assetReuseTarget": 0.65,
