@@ -49,5 +49,8 @@ jobs:
       - name: Test narrative scene blueprint
         run: npm run test:narrative
 
+      - name: Test Sereia diagnostics
+        run: npm run test:diagnostics
+
       - name: Test upstream core
         run: npm test
