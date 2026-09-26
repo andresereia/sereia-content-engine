@@ -5,7 +5,7 @@ const { TopicIntelligenceShadowService } = require('./topic-intelligence-shadow'
 
 function isShadowModeEnabled(profile) {
   if (String(process.env.SEREIA_TOPIC_SHADOW_MODE || '').toLowerCase() === 'false') return false;
-  return profile?.editorial?.topicScoring?.shadowModeEnabled !== false;
+  return profile?.editorial?.topicScoring?.shadowModeEnabled === true;
 }
 
 function installStrategyShadowBootstrap(options = {}) {
